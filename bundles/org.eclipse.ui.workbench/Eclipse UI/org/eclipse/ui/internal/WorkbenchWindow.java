@@ -114,7 +114,6 @@ import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.jface.action.SubContributionItem;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.internal.provisional.action.CoolBarManager2;
 import org.eclipse.jface.internal.provisional.action.ICoolBarManager2;
 import org.eclipse.jface.internal.provisional.action.IToolBarManager2;
@@ -934,22 +933,6 @@ public class WorkbenchWindow implements IWorkbenchWindow {
 
 			getShell().setData(this);
 			trackShellActivation();
-			/**
-			 * When SWT zoom changes for primary monitor, prompt user to restart Eclipse to
-			 * apply the changes.
-			 */
-			getShell().addListener(SWT.ZoomChanged, event -> {
-				if (getShell().getDisplay().getPrimaryMonitor().equals(getShell().getMonitor())) {
-					int dialogResponse = MessageDialog.open(MessageDialog.QUESTION, getShell(),
-							WorkbenchMessages.Workbench_zoomChangedTitle,
-							WorkbenchMessages.Workbench_zoomChangedMessage, SWT.NONE,
-							WorkbenchMessages.Workbench_RestartButton, WorkbenchMessages.Workbench_DontRestartButton);
-					if (event.doit && dialogResponse == 0) {
-						getWorkbenchImpl().restart(true);
-					}
-				}
-			});
-
 		} finally {
 			HandlerServiceImpl.pop();
 		}
