@@ -21,6 +21,7 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.internal.DPIZoomChangeRegistry;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -86,6 +87,7 @@ public class ImageBasedFrame extends Canvas {
 		toWrap.addControlListener(new ControlListener() {
 			@Override
 			public void controlResized(ControlEvent e) {
+				setSize(computeSize(-1, -1));
 				pack(true);
 			}
 
@@ -333,6 +335,10 @@ public class ImageBasedFrame extends Canvas {
 		return handle;
 	}
 
+	public Control getFramedControl() {
+		return framedControl;
+	}
+
 	public void setImages(Image frameImage, Integer[] frameInts,
 			Image handleImage) {
 		if (frameImage != null) {
@@ -367,5 +373,9 @@ public class ImageBasedFrame extends Canvas {
 			}
 		}
 		setSize(computeSize(-1, -1));
+	}
+
+	static {
+		DPIZoomChangeRegistry.registerHandler(new ImageBasedFrameDPIUpdater()::visit, ImageBasedFrame.class);
 	}
 }
